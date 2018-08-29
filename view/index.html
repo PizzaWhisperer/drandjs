@@ -9,8 +9,12 @@
 <body>
     <script src="../javascript/bundle.js"></script>
     <script>
-      identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true}
-      fetchAndVerify(identity);
+      function wrap() {
+        identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true}
+        fetchAndVerify(identity);
+      }
+      wrap();
+      window.setInterval(wrap,60000);
     </script>
     <h1>
       <a href="https://github.com/dedis/drand">drand</a> - publicly verifiable unbiasable randomness
