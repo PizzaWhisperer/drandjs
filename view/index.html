@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>The HTML5 Herald</title>
     <meta name="description" content="The HTML5 Herald">
     <meta name="author" content="SitePoint">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <style>
+      body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    </style>
+    <header>
+      <center>
+      <h1><b><a href="https://github.com/dedis/drand">DRAND</a></b></h1>
+      <h3>(experimental) Distributed Randomness Beacon Daemon</h3>
+    </center>
+    </header>
 </head>
 <body>
     <script src="../javascript/bundle.js"></script>
     <script>
       function wrap() {
-        identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true}
+        identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true, Public_key: "012067064287f0d81a03e575109478287da0183fcd8f3eda18b85042d1c8903ec8160c56eb6d5884d8c519c30bfa3bf5181f42bcd2efdbf4ba42ab0f31d13c97e9552543be1acf9912476b7da129d7c7e427fbafe69ac5b635773f488b8f46f3fc40c673b93a08a20c0e30fd84de8a89adb6fb95eca61ef2fff66527b3be4912de"}
         fetchAndVerify(identity);
       }
       wrap();
       window.setInterval(wrap,60000);
     </script>
-    <h1>
-      <a href="https://github.com/dedis/drand">drand</a> - publicly verifiable unbiasable randomness
-    </h1>
 <div>
 </div>
 </body>
