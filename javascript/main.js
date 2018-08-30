@@ -17,15 +17,6 @@ fetchPublic(identity)
        randomness = rand.randomness
        round = rand.round
        err = main.Verify(previous, randomness, round, identity.Public_key)
-       if (!err) {
-         var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : verified.');
-       } else {
-         var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : not verified.');
-       }
-       var p = document.createElement("p");
-       p.appendChild(textnode);
-       var div = document.querySelector('div');
-       div.appendChild(p);
        return previous, randomness, round, err
      })
 }
