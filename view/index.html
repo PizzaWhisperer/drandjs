@@ -21,22 +21,35 @@
     </div>
     <script>
       const div = document.querySelector('#printDiv');
-      var lastRound = 0;
+      var lastRound = "0";
+
       function wrap() {
-        identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true, Public_key: "012067064287f0d81a03e575109478287da0183fcd8f3eda18b85042d1c8903ec8160c56eb6d5884d8c519c30bfa3bf5181f42bcd2efdbf4ba42ab0f31d13c97e9552543be1acf9912476b7da129d7c7e427fbafe69ac5b635773f488b8f46f3fc40c673b93a08a20c0e30fd84de8a89adb6fb95eca61ef2fff66527b3be4912de"}
-        var previous, randomness, round, err = fetchAndVerify(identity);
-        if (round == lastRound || round == undefined) {
-          return
-        }
-        lastRound = round;
-        if (!err) {
-          var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : verified.');
-        } else {
-          var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : not verified.');
-        }
-        var p = document.createElement("p");
-        p.appendChild(textnode);
-        div.appendChild(p);
+        identity = {Address: "127.0.0.1:8000", TLS: false}
+        fetchAndVerify(identity)
+          .then(function (fullfiled) {
+            randomness = fullfiled[1]
+            round = fullfiled[2]
+            if (round == lastRound || round == undefined) {
+              return
+            }
+            lastRound = round;
+            var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : verified.');
+            var p = document.createElement("p");
+            p.appendChild(textnode);
+            div.appendChild(p);
+        })
+          .catch(function (error) {
+            randomness = fullfiled[1]
+            round = fullfiled[2]
+            if (round == lastRound || round == undefined) {
+              return
+            }
+            lastRound = round;
+            var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : not verified.');
+            var p = document.createElement("p");
+            p.appendChild(textnode);
+            div.appendChild(p);
+        });
       }
       wrap();
       window.setInterval(wrap,60000);

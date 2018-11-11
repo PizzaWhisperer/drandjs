@@ -1,6 +1,6 @@
 package main
 
-//go:generate gopherjs build
+//go:generate gopherjs build -o go.js
 
 import (
 	"bytes"
@@ -8,7 +8,6 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
-	"errors"
 	"log"
 	"math/big"
 	"strconv"
@@ -17,7 +16,7 @@ import (
 	gbn256 "golang.org/x/crypto/bn256"
 )
 
-func Verify(previous string, randomness string, round string, public_key_hex string) error {
+func Verify(previous string, randomness string, round string, public_key_hex string) bool {
 
 	prev, err := base64.StdEncoding.DecodeString(previous)
 	if err != nil {
@@ -49,9 +48,9 @@ func Verify(previous string, randomness string, round string, public_key_hex str
 	right := gbn256.Pair(c, d)
 
 	if bytes.Equal(left.Marshal(), right.Marshal()) {
-		return nil
+		return true
 	} else {
-		return errors.New("We couldn't verify")
+		return false
 	}
 }
 
