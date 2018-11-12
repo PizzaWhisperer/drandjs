@@ -25,11 +25,11 @@ identity = XXX;
 fetchAndVerify(identity)
   .then(function (fulfilled) {
   //The random output was successfully verified, you can
-  //do something with fulfilled = [message, signature, round] such as printing it.
+  //do something with fulfilled = [randomness, round] such as printing it.
   })
   .catch(function (error) {
     //A problem occurred during the verification process. You can
-    //do something with error = [message, signature, round] such as printing it.
+    //do something with error = [randomness, round] such as printing it.
   })
 ```
 See [view/index.html](view/index.html) for an example.
