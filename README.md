@@ -32,6 +32,12 @@ fetchAndVerify(identity)
     //do something with error = [randomness, round] such as printing it.
   })
 ```
-See [view/index.html](view/index.html) for an example.
+
+#### Example
+We provide a script to locally run a server that will fake a drand instance. To start it, go to the `test` folder and execute:
+```bash
+python3 script.py
+```
+`fetchAndVerify` can now contact the localhost and print the fetched randomness as shown when opening [view/index.html](view/index.html).
 
 Uses [gopherjs](https://github.com/gopherjs/gopherjs) and [browserify](http://browserify.org/).
