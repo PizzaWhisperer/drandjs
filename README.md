@@ -13,7 +13,7 @@ Using the package [bn256](https://godoc.org/golang.org/x/crypto/bn256) form gola
 }
 ```
 #### Returns
-`fetchAndVerify` is a Promise which returns a array [message, signature, round].
+`fetchAndVerify` is a Promise which returns a array [randomness, round].
 #### Usage
 To use the function `fetchAndVerify`, just import the library within an html file with the line
 ```javascript
