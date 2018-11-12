@@ -39,8 +39,8 @@
             div.appendChild(p);
         })
           .catch(function (error) {
-            randomness = fullfiled[1]
-            round = fullfiled[2]
+            randomness = error[1]
+            round = error[2]
             if (round == lastRound || round == undefined) {
               return
             }
