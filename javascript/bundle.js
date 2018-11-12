@@ -29400,7 +29400,7 @@ $packages["math/big"] = (function() {
 				j = j + (1) >>> 0;
 			/* } */ $s = 10; continue; case 11:
 			$s = -1; return false;
-  case 2:
+      case 2:
 		$s = -1; return true;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: nat.prototype.probablyPrimeMillerRabin }; } $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tuple = _tuple; $f.force2 = force2; $f.i = i; $f.j = j; $f.k = k; $f.n = n; $f.nm1 = nm1; $f.nm3 = nm3; $f.nm3Len = nm3Len; $f.q = q; $f.quotient = quotient; $f.rand$1 = rand$1; $f.reps = reps; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -33590,8 +33590,7 @@ var fetchAndVerify = function(address) {
         previous = rand.previous
         randomness = rand.randomness
         round = rand.round
-        ok = main.Verify(previous, randomness, round, pub_key)
-        if (!ok) {
+        if (main.Verify(previous, randomness, round, pub_key)) {
           resolve([previous, randomness, round]);
         } else {
           reject([previous, randomness, round]);

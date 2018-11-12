@@ -31,8 +31,7 @@ var fetchAndVerify = function(address) {
         previous = rand.previous
         randomness = rand.randomness
         round = rand.round
-        ok = main.Verify(previous, randomness, round, pub_key)
-        if (!ok) {
+        if (main.Verify(previous, randomness, round, pub_key)) {
           resolve([previous, randomness, round]);
         } else {
           reject([previous, randomness, round]);
