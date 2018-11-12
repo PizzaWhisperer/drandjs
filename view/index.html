@@ -26,9 +26,9 @@
       function wrap() {
         identity = {Address: "127.0.0.1:8000", TLS: false}
         fetchAndVerify(identity)
-          .then(function (fullfiled) {
-            randomness = fullfiled[1]
-            round = fullfiled[2]
+          .then(function (fulfilled) {
+            randomness = fulfilled[1]
+            round = fulfilled[2]
             if (round == lastRound || round == undefined) {
               return
             }
