@@ -25,16 +25,15 @@ var fetchAndVerify = function(address) {
     var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
 
     fetchKey(address).then(key => {
-      pub_key = key.key
-
+      pub_key = key.key.point
       fetchPublic(address).then(rand => {
         previous = rand.previous
-        randomness = rand.randomness
-        round = rand.round
+        randomness = rand.randomness.point
+        round = rand.round.toString();
         if (main.Verify(previous, randomness, round, pub_key)) {
-          resolve([previous, randomness, round]);
+          resolve([randomness, round]);
         } else {
-          reject([previous, randomness, round]);
+          reject([randomness, round]);
         }
       })
     })

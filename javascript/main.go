@@ -5,7 +5,7 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/base64"
+	//"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
 	"log"
@@ -16,9 +16,10 @@ import (
 	gbn256 "golang.org/x/crypto/bn256"
 )
 
-func Verify(previous string, randomness string, round string, public_key_hex string) bool {
+//previous, randomness and public_key are hexadecimal strings, round is a string representing an int
+func Verify(previous string, randomness string, round string, public_key string) bool {
 
-	prev, err := base64.StdEncoding.DecodeString(previous)
+	prev, err := hex.DecodeString(previous)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,25 +29,29 @@ func Verify(previous string, randomness string, round string, public_key_hex str
 	buff.Write(prev)
 	msg := buff.Bytes()
 
-	sig, err := base64.StdEncoding.DecodeString(randomness)
-	if err != nil {
-		log.Fatal(err)
-	}
-	data, _ := hex.DecodeString(public_key_hex)
-	//We can get rid of the leading 1 added during Marshal
-	public_key := data[1:]
-
 	h := sha256.New()
 	h.Write(msg)
 	k := new(big.Int).SetBytes(h.Sum(nil))
 	a := new(gbn256.G1).ScalarBaseMult(k)
-	b, _ := new(gbn256.G2).Unmarshal(public_key)
-	left := gbn256.Pair(a, b)
 
+	data, err := hex.DecodeString(public_key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//We can get rid of the leading 1 added during Marshal
+	data = data[1:]
+	b, _ := new(gbn256.G2).Unmarshal(data)
+
+	sig, err := hex.DecodeString(randomness)
+	if err != nil {
+		log.Fatal(err)
+	}
 	c, _ := new(gbn256.G1).Unmarshal(sig)
-	d := new(gbn256.G2).ScalarBaseMult(new(big.Int).SetInt64(1))
-	right := gbn256.Pair(c, d)
 
+	d := new(gbn256.G2).ScalarBaseMult(new(big.Int).SetInt64(1))
+
+	left := gbn256.Pair(a, b)
+	right := gbn256.Pair(c, d)
 	if bytes.Equal(left.Marshal(), right.Marshal()) {
 		return true
 	} else {

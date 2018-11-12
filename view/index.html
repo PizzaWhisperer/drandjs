@@ -27,8 +27,8 @@
         identity = {Address: "127.0.0.1:8000", TLS: false}
         fetchAndVerify(identity)
           .then(function (fulfilled) {
-            randomness = fulfilled[1]
-            round = fulfilled[2]
+            randomness = fulfilled[0]
+            round = fulfilled[1]
             if (round == lastRound || round == undefined) {
               return
             }
@@ -39,8 +39,8 @@
             div.appendChild(p);
         })
           .catch(function (error) {
-            randomness = error[1]
-            round = error[2]
+            randomness = error[0]
+            round = error[1]
             if (round == lastRound || round == undefined) {
               return
             }
