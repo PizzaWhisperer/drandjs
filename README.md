@@ -38,6 +38,6 @@ We provide a script to locally run a server that will fake a drand instance and 
 To launch the server and open the html file, go to the `example` folder and execute:
 ```bash
 python3 script.py
-```.
+```
 
 Uses [gopherjs](https://github.com/gopherjs/gopherjs) and [browserify](http://browserify.org/).
