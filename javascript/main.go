@@ -1,6 +1,6 @@
 package main
 
-//go:generate gopherjs build -o go.js
+//go:generate gopherjs build --tags generic -o go.js
 
 import (
 	"bytes"
@@ -9,7 +9,6 @@ import (
 
 	"encoding/binary"
 	"encoding/hex"
-	"log"
 	"strconv"
 
 	"github.com/dedis/kyber/pairing/bn256"
@@ -33,27 +32,31 @@ func Verify(previous string, randomness string, round string, pubKey string) boo
 
 	prev, err := hex.DecodeString(previous)
 	if err != nil {
-		log.Fatal(err)
+		println("", err)
+		return false
 	}
 	iround, _ := strconv.Atoi(round)
 	msg := Message(prev, uint64(iround))
 
 	data, err := hex.DecodeString(pubKey)
 	if err != nil {
-		log.Fatal(err)
+		println("", err)
+		return false
 	}
-	pub := suite.Point()
+	pub := suite.G2().Point()
 	if err := pub.UnmarshalBinary(data); err != nil {
-		log.Fatal(err)
+		println(err)
+		return false
 	}
 
 	sig, err := hex.DecodeString(randomness)
 	if err != nil {
-		log.Fatal(err)
+		println("", err)
+		return false
 	}
 
 	if err := bls.Verify(suite, pub, msg, sig); err != nil {
-		println(err)
+		println("", err)
 		return false
 	}
 	return true
