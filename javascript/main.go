@@ -1,62 +1,65 @@
 package main
 
-//go:generate gopherjs build -o go.js
+//go:generate gopherjs build --tags generic -o go.js
 
 import (
 	"bytes"
-	"crypto/sha256"
+
 	//"encoding/base64"
+
 	"encoding/binary"
 	"encoding/hex"
-	"log"
-	"math/big"
 	"strconv"
 
+	"github.com/dedis/kyber/pairing/bn256"
+	"github.com/dedis/kyber/sign/bls"
 	"github.com/gopherjs/gopherjs/js"
-	gbn256 "golang.org/x/crypto/bn256"
 )
 
-//previous, randomness and public_key are hexadecimal strings, round is a string representing an int
-func Verify(previous string, randomness string, round string, public_key string) bool {
+// Message returns a slice of bytes as the message to sign or to verify
+// alongside a beacon signature.
+func Message(prevRand []byte, round uint64) []byte {
+	var buff bytes.Buffer
+	binary.Write(&buff, binary.BigEndian, round)
+	buff.Write(prevRand)
+	return buff.Bytes()
+}
+
+var suite = bn256.NewSuite()
+
+// Verify previous, randomness and public_key are hexadecimal strings, round is a string representing an int
+func Verify(previous string, randomness string, round string, pubKey string) bool {
 
 	prev, err := hex.DecodeString(previous)
 	if err != nil {
-		log.Fatal(err)
+		println("", err)
+		return false
 	}
-	var buff bytes.Buffer
 	iround, _ := strconv.Atoi(round)
-	binary.Write(&buff, binary.BigEndian, uint64(iround))
-	buff.Write(prev)
-	msg := buff.Bytes()
+	msg := Message(prev, uint64(iround))
 
-	h := sha256.New()
-	h.Write(msg)
-	k := new(big.Int).SetBytes(h.Sum(nil))
-	a := new(gbn256.G1).ScalarBaseMult(k)
-
-	data, err := hex.DecodeString(public_key)
+	data, err := hex.DecodeString(pubKey)
 	if err != nil {
-		log.Fatal(err)
+		println("", err)
+		return false
 	}
-	//We can get rid of the leading 1 added during Marshal
-	data = data[1:]
-	b, _ := new(gbn256.G2).Unmarshal(data)
+	pub := suite.G2().Point()
+	if err := pub.UnmarshalBinary(data); err != nil {
+		println(err)
+		return false
+	}
 
 	sig, err := hex.DecodeString(randomness)
 	if err != nil {
-		log.Fatal(err)
-	}
-	c, _ := new(gbn256.G1).Unmarshal(sig)
-
-	d := new(gbn256.G2).ScalarBaseMult(new(big.Int).SetInt64(1))
-
-	left := gbn256.Pair(a, b)
-	right := gbn256.Pair(c, d)
-	if bytes.Equal(left.Marshal(), right.Marshal()) {
-		return true
-	} else {
+		println("", err)
 		return false
 	}
+
+	if err := bls.Verify(suite, pub, msg, sig); err != nil {
+		println("", err)
+		return false
+	}
+	return true
 }
 
 func main() {
