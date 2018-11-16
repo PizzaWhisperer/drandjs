@@ -40,31 +40,4 @@ var fetchAndVerify = function(address) {
   });
 }
 
-/*
-var fetchAndVerify = new Promise(
-function(address) {
-var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
-fetchKey(address).then(key => {
-    pub_key = key.key
-    fetchPublic(address).then(rand => {
-      previous = rand.previous
-      randomness = rand.randomness
-      round = rand.round
-      //err = main.Verify(previous, randomness, round, pub_key)
-      //console.log("is it a Promise?");
-      //console.log(Promise.resolve(main.Verify(previous, randomness, round, pub_key)) == main.Verify(previous, randomness, round, pub_key));
-      //while (err == undefined) {
-        //console.log("undef");
-      //}
-      //console.log("err after")
-      //console.log(err)
-      //console.log("previous after")
-      console.log(previous)
-      //console.log("pub key")
-      //console.log(pub_key)
-      return previous, randomness, round, false
-    })
-  })
-}
-*/
 window.fetchAndVerify = fetchAndVerify

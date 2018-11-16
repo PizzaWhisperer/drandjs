@@ -4,9 +4,6 @@ package main
 
 import (
 	"bytes"
-
-	//"encoding/base64"
-
 	"encoding/binary"
 	"encoding/hex"
 	"strconv"

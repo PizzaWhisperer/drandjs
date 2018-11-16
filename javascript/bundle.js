@@ -17580,7 +17580,7 @@ $packages["internal/poll"] = (function() {
 				$s = -1; return [0, err$2];
 			}
 			$s = -1; return [p.$length, $ifaceNil];
-      case 3:
+		  case 3:
 		$s = -1; return [0, $ifaceNil];
 		/* */ } return; } } catch(err) { $err = err; $s = -1; return [0, $ifaceNil]; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: FD.ptr.prototype.WriteTo }; } $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fd = fd; $f.p = p; $f.sa = sa; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
@@ -35598,33 +35598,6 @@ var fetchAndVerify = function(address) {
   });
 }
 
-/*
-var fetchAndVerify = new Promise(
-function(address) {
-var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
-fetchKey(address).then(key => {
-    pub_key = key.key
-    fetchPublic(address).then(rand => {
-      previous = rand.previous
-      randomness = rand.randomness
-      round = rand.round
-      //err = main.Verify(previous, randomness, round, pub_key)
-      //console.log("is it a Promise?");
-      //console.log(Promise.resolve(main.Verify(previous, randomness, round, pub_key)) == main.Verify(previous, randomness, round, pub_key));
-      //while (err == undefined) {
-        //console.log("undef");
-      //}
-      //console.log("err after")
-      //console.log(err)
-      //console.log("previous after")
-      console.log(previous)
-      //console.log("pub key")
-      //console.log(pub_key)
-      return previous, randomness, round, false
-    })
-  })
-}
-*/
 window.fetchAndVerify = fetchAndVerify
 
 },{"./go.js":1}]},{},[2]);
