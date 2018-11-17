@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8">
     <meta name="description" content="The HTML5 Herald">
     <meta name="author" content="SitePoint">
@@ -16,6 +17,7 @@
     </header>
 </head>
 <body>
+    <div id="loader"></div>
     <script src="../javascript/bundle.js"></script>
     <div id="printDiv">
     </div>
@@ -36,6 +38,7 @@
             var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : verified.');
             var p = document.createElement("p");
             p.appendChild(textnode);
+            document.getElementById("loader").style.display = "none";
             div.appendChild(p);
         })
           .catch(function (error) {
@@ -48,6 +51,7 @@
             var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : not verified.');
             var p = document.createElement("p");
             p.appendChild(textnode);
+            document.getElementById("loader").style.display = "none";
             div.appendChild(p);
         });
       }
