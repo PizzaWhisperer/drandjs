@@ -20,13 +20,13 @@ function fetchKey(identity) {
   return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
 }
 
-var fetchAndVerify = function(address) {
+var fetchAndVerify = function(identity) {
   return new Promise(function(resolve, reject) {
     var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
 
-    fetchKey(address).then(key => {
+    fetchKey(identity).then(key => {
       pub_key = key.key.point
-      fetchPublic(address).then(rand => {
+      fetchPublic(identity).then(rand => {
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();

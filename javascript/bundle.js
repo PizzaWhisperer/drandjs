@@ -17580,7 +17580,7 @@ $packages["internal/poll"] = (function() {
 				$s = -1; return [0, err$2];
 			}
 			$s = -1; return [p.$length, $ifaceNil];
-		  case 3:
+		/* } */ $s = 2; continue; case 3:
 		$s = -1; return [0, $ifaceNil];
 		/* */ } return; } } catch(err) { $err = err; $s = -1; return [0, $ifaceNil]; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: FD.ptr.prototype.WriteTo }; } $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fd = fd; $f.p = p; $f.sa = sa; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
@@ -17614,7 +17614,7 @@ $packages["internal/poll"] = (function() {
 				$s = -1; return [n, 0, err$2];
 			}
 			$s = -1; return [n, oob.$length, err$2];
-		  case 3:
+		/* } */ $s = 2; continue; case 3:
 		$s = -1; return [0, 0, $ifaceNil];
 		/* */ } return; } } catch(err) { $err = err; $s = -1; return [0, 0, $ifaceNil]; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: FD.ptr.prototype.WriteMsg }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fd = fd; $f.n = n; $f.oob = oob; $f.p = p; $f.sa = sa; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
@@ -17655,7 +17655,7 @@ $packages["internal/poll"] = (function() {
 				/* continue; */ $s = 2; continue;
 			}
 			$s = -1; return [-1, $ifaceNil, errcall, err$2];
-		  case 3:
+		/* } */ $s = 2; continue; case 3:
 		$s = -1; return [0, $ifaceNil, "", $ifaceNil];
 		/* */ } return; } } catch(err) { $err = err; $s = -1; return [0, $ifaceNil, "", $ifaceNil]; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: FD.ptr.prototype.Accept }; } $f._1 = _1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.errcall = errcall; $f.fd = fd; $f.rsa = rsa; $f.s = s; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
@@ -29843,7 +29843,7 @@ $packages["math/big"] = (function() {
 				j = j + (1) >>> 0;
 			/* } */ $s = 10; continue; case 11:
 			$s = -1; return false;
-		  case 2:
+		/* } */ $s = 1; continue; case 2:
 		$s = -1; return true;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: nat.prototype.probablyPrimeMillerRabin }; } $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tuple = _tuple; $f.force2 = force2; $f.i = i; $f.j = j; $f.k = k; $f.n = n; $f.nm1 = nm1; $f.nm3 = nm3; $f.nm3Len = nm3Len; $f.q = q; $f.quotient = quotient; $f.rand$1 = rand$1; $f.reps = reps; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -35578,13 +35578,13 @@ function fetchKey(identity) {
   return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
 }
 
-var fetchAndVerify = function(address) {
+var fetchAndVerify = function(identity) {
   return new Promise(function(resolve, reject) {
     var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
 
-    fetchKey(address).then(key => {
+    fetchKey(identity).then(key => {
       pub_key = key.key.point
-      fetchPublic(address).then(rand => {
+      fetchPublic(identity).then(rand => {
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
