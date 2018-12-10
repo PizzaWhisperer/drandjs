@@ -13,7 +13,7 @@ On the other hand, `fetchAndVerifyWithKey` does not fetch the distributed key bu
   TLS: true,
 }
 ```
-To specify which distributes key to use, `fetchAndVerifyWithKey` needs on top of what was described above a field `Key` which should be an hexadecimal string. For example :
+To specify which distributed key to use, `fetchAndVerifyWithKey` needs in addition a field `Key` which should be an hexadecimal string. For example :
 ```javascript
 {
   Address: "drand.nikkolasg.xyz:8888",
@@ -42,10 +42,10 @@ fetchAndVerify(identity)
     //do something with error = [randomness, round] such as printing it.
   })
 ```
-Same scheme can be applied to
+Same scheme can be applied to `fetchAndVerifyWithKey`.
 
 #### Example
-We provide a script to locally run a server that will fake a drand instance and a simple html file which show what you can do with `fetchAndVerify` and `fetchAndVerifyWithKey`. To specify which function to test, comment/uncomment the corresponding lines in the `wrap` function of the `view/index.html` file. The default function used is `fetchAndVerify` (the one that fetches the distributed key).
+We provide a script to locally run a server that will fake a drand instance and a simple html file which show what you can do with `fetchAndVerify` and `fetchAndVerifyWithKey`. To specify which function to test, comment/uncomment the corresponding lines in the `wrap` function of the [`view/index.html` file](https://github.com/PizzaWhisperer/drandjs/blob/master/view/index.html#L91-L92). The default function used is `fetchAndVerify` (the one that fetches the distributed key).
 
 To launch the server and open the html file, go to the `example` folder and execute:
 ```bash
