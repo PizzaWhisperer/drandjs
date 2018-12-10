@@ -35598,6 +35598,24 @@ var fetchAndVerify = function(identity) {
   });
 }
 
+var fetchAndVerifyWithKey = function(identity) {
+  return new Promise(function(resolve, reject) {
+    var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
+    fetchPublic(identity).then(rand => {
+      pub_key = identity.Key
+      previous = rand.previous
+      randomness = rand.randomness.point
+      round = rand.round.toString();
+      if (main.Verify(previous, randomness, round, pub_key)) {
+        resolve([randomness, round]);
+      } else {
+        reject([randomness, round]);
+      }
+    })
+  });
+}
+
 window.fetchAndVerify = fetchAndVerify
+window.fetchAndVerifyWithKey = fetchAndVerifyWithKey
 
 },{"./go.js":1}]},{},[2]);
