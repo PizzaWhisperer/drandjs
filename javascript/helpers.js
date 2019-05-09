@@ -28,14 +28,12 @@ function bytesToHex(bytes) {
 		return hex.join("");
 	}
 
-//hex string ti bytes array
 function hexToBytes(hex) {
     for (var bytes = [], c = 0; c < hex.length; c += 2)
     bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
 
-//from int to bytes
 function intToBytes(int) {
     var bytes = [];
     var i = 8;
@@ -46,14 +44,14 @@ function intToBytes(int) {
     return bytes;
 }
 
-//message takes hex string and int and returns bytes
+//from msg and round to what was signed
 function message(msg, round) {
   var b_msg = hexToBytes(msg);
   var b_round = intToBytes(round);
   return b_round.concat(b_msg);
 }
 
-//previous, randomness and pub_key are hexadecimal strings, round is a string representing an int
+//formats the received strings and verifies signature
 function verify_drand(previous, randomness, round, pub_key) {
   var nist = kyber.curve.nist;
   var p256 = new nist.Curve(nist.Params.p256);
