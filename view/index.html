@@ -18,23 +18,12 @@
 </head>
 <body>
     <div id="loader"></div>
-    <script src="../libraries/JSPairings/public_html/BigInteger.js"></script>
-    <script src="../libraries/JSPairings/public_html/PRNG4.js"></script>
-    <script src="../libraries/JSPairings/public_html/RNG.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSPoint.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSField2.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSField4.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSField6.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSField12.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSParams.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSCurve.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSPoint2.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSCurve2.js"></script>
-    <script src="../libraries/JSPairings/public_html/JSPairing.js"></script>
+    <script src="../libraries/bundle.min.js"></script>
     <script src="../javascript/helpers.js"></script>
     <script src="../javascript/drand.js"></script>
     <div id="printDiv">
     </div>
+
     <script>
       const div = document.querySelector('#printDiv');
       var lastRound = "0";
@@ -71,7 +60,7 @@
       }
 
       function testFetchAndVerifyWithKey() {
-        identity = {Address: "127.0.0.1:8000", TLS: false, Key: "017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"}
+        identity = {Address: "127.0.0.1:8000", TLS: false, Key: "11fda77bab995f5142f8b92b480d128af90e8339e4431bbc9fa6b0d9ea2ab67e02d45223db09e13f000e5805eec825bbca15b434a3463215cca82e3c96d6247a2c86e6ab9141572f9d0e6bae9e0bde47d3fb70769745d90925b3d36a984bcb41691b7c200c5cafac958fe874d69eb54a00e376340b7106139118561930ec300b"}
         fetchAndVerifyWithKey(identity)
           .then(function (fulfilled) {
             randomness = fulfilled[0]
@@ -101,13 +90,13 @@
         });
       }
 
-      function wrap() {
+      function chooseOne() {
         testFetchKeyAndPublic()
         //testFetchAndVerifyWithKey()
       }
 
-      wrap();
-      window.setInterval(wrap,60000);
+      chooseOne();
+      window.setInterval(chooseOne,60000);
     </script>
 </body>
 </html>

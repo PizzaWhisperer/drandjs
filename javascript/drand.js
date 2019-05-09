@@ -8,7 +8,7 @@ var fetchAndVerify = function(identity) {
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
-        if (verify(previous, randomness, round, pub_key)) {
+        if (verify_drand(previous, randomness, round, pub_key)) {
           resolve([randomness, round]);
         } else {
           reject([randomness, round]);
@@ -26,7 +26,7 @@ var fetchAndVerifyWithKey = function(identity) {
       previous = rand.previous
       randomness = rand.randomness.point
       round = rand.round.toString();
-      if (verify(previous, randomness, round, pub_key)) {
+      if (verify_drand(previous, randomness, round, pub_key)) {
         resolve([randomness, round]);
       } else {
         reject([randomness, round]);
