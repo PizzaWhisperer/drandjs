@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="utf-8">
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <style>
+  body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+  </style>
+  <header>
+    <center>
+      <h1><b><a href="https://github.com/dedis/drand">drand</a></b></h1>
+      <h3>Distributed Randomness Beacon</h3>
+    </center>
+  </header>
+</head>
+<body>
+  <div id="loader"></div>
+  <script src="../../dist/drand.js"></script>
+
+  <div id="randomness"></div>
+
+  <script>
+
+  const randDiv = document.querySelector('#randomness');
+  var lastRound = "0";
+
+  function display_randomness() {
+    let identity = {Address: "127.0.0.1:8000", TLS: false, Key: ""};
+
+    fetchAndVerify(identity)
+    .then(function (fulfilled) {
+      randomness = fulfilled[0];
+      previous = fulfilled[1];
+      round = fulfilled[2];
+      print_round(randomness, previous, round, true);
+    })
+    .catch(function (error) {
+      randomness = error[0];
+      previous = error[1];
+      round = error[2];
+      print_round(randomness, previous, round, false);
+    });
+  }
+
+  function print_round(randomness, previous, round, verified) {
+    console.log(randomness);
+    console.log(verified);
+    if (round == lastRound || round == undefined) {
+      return
+    }
+    lastRound = round;
+    if (verified) {
+      var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : verified.');
+    } else {
+      var textnode = document.createTextNode('(' + round + ') ' + randomness + ' : unverified.');
+    }
+    var p = document.createElement("p");
+    p.appendChild(textnode);
+    document.getElementById("loader").style.display = "none";
+    randDiv.appendChild(p);
+  }
+
+  display_randomness();
+  window.setInterval(display_randomness,60000);
+  </script>
+</body>
+</html>
