@@ -2,7 +2,6 @@
 
 Using the package [kyberJS](https://github.com/dedis/cothority/tree/master/external/js/kyber) from dedis, we provide a JavaScript library with a function `fetchAndVerify` that can verify the randomness of the outputted signature S of a [drand](https://github.com/dedis/drand) round, against a message M and the distributed key DK of the protocol run. To do such, it checks that e(M, DK) = e(S, 1), with e being the Optimal Ate pairing operation.
 
-
 #### Identity
 `fetchAndVerify` takes as parameter a structure identity composed of the address to fetch the random signature from and a boolean specifying whether to use https or http, and the distributed key.
 `fetchAndVerify` can also be used in fully **automatic** mode, and fetch the distributed key for the user, to do such, use "" for the Key such as :
@@ -26,7 +25,8 @@ If you want to specify which distributed key to use, which should be an hexadeci
 #### Returns
 The function returns a Promise [randomness, previous, round].
 #### Usage
-To use drandjs, bundle every file together by running `make compile`. It will create a file `drand.js` in the folder `dist` that you can import with the line
+
+To use drandjs, bundle every file together by running `make compile`. It will create a file `drand.js` in the folder `dist` that you can import with the line :
 ```javascript
 <script src="../path/to/drand.js"></script>
 ```
@@ -45,6 +45,7 @@ fetchAndVerify(identity)
 ```
 
 #### Example
+
 We provide a script to locally run a server that will fake a drand server and a simple html file which show what you could do with `fetchAndVerify`.
 
 To launch the server and open the html file, go to the `example` folder and execute:
