@@ -1,19 +1,19 @@
 # drandjs
 
-Using the package [kyberJS](https://github.com/dedis/cothority/tree/master/external/js/kyber) from dedis, we provide a JavaScript library with two functions `fetchAndVerify` and `fetchAndVerifyWithKey` that can verify the randomness of the outputted signature S of a [drand](https://github.com/dedis/drand) round, against a message M and the distributed key DK of the protocol run. To do such, it checks that e(M, DK) = e(S, 1), with e being the Optimal Ate pairing operation.
-`fetchAndVerify` procedure has 3 steps : it fetches the distributed key at the given address, then the random output, and then verifies the randomness with the process described above.
-On the other hand, `fetchAndVerifyWithKey` does not fetch the distributed key but uses the one given by the user.
+Using the package [kyberJS](https://github.com/dedis/cothority/tree/master/external/js/kyber) from dedis, we provide a JavaScript library with a function `fetchAndVerify` that can verify the randomness of the outputted signature S of a [drand](https://github.com/dedis/drand) round, against a message M and the distributed key DK of the protocol run. To do such, it checks that e(M, DK) = e(S, 1), with e being the Optimal Ate pairing operation.
 
-
-#### Params
-`fetchAndVerify` takes as parameter a structure identity composed of the address to fetch the random signature from and a boolean specifying whether to use https or http, such as :
+#### Identity
+`fetchAndVerify` takes as parameter a structure identity composed of the address to fetch the random signature from and a boolean specifying whether to use https or http, and the distributed key.
+`fetchAndVerify` can also be used in fully **automatic** mode, and fetch the distributed key for the user, to do such, use "" for the Key such as :
 ```javascript
 {
   Address: "drand.nikkolasg.xyz:8888",
   TLS: true,
+  Key: "",
 }
 ```
-To specify which distributed key to use, `fetchAndVerifyWithKey` needs in addition a field `Key` which should be an hexadecimal string. For example :
+
+If you want to specify which distributed key to use, which should be an hexadecimal string, you can provide an identity struct which looks like :
 ```javascript
 {
   Address: "drand.nikkolasg.xyz:8888",
@@ -23,13 +23,12 @@ To specify which distributed key to use, `fetchAndVerifyWithKey` needs in additi
 ```
 
 #### Returns
-Both functions are Promises which return a array [randomness, round] on completion.
+The function returns a Promise [randomness, previous, round].
 #### Usage
-To use the functions `fetchAndVerify` and `fetchAndVerifyWithKey`, download the folder `javascript` and import the 3 `js` files within your html with the lines :
+
+To use drandjs, bundle every file together by running `make compile`. It will create a file `drand.js` in the folder `dist` that you can import with the line :
 ```javascript
-<script src="../javascript/kyberjs.min.js"></script>
-<script src="../javascript/helpers.js"></script>
-<script src="../javascript/drand.js"></script>
+<script src="../path/to/drand.js"></script>
 ```
 and call it like :
 ```javascript
@@ -37,17 +36,17 @@ identity = XXX;
 fetchAndVerify(identity)
   .then(function (fulfilled) {
   //The random output was successfully verified, you can
-  //do something with fulfilled = [randomness, round] such as printing it.
+  //do something with fulfilled = [randomness, previous, round] such as printing it.
   })
   .catch(function (error) {
     //A problem occurred during the verification process. You can
-    //do something with error = [randomness, round] such as printing it.
+    //do something with error = [randomness, previous, round] such as printing it.
   })
 ```
-Same scheme can be applied to `fetchAndVerifyWithKey`.
 
 #### Example
-We provide a script to locally run a server that will fake a drand instance and a simple html file which show what you can do with `fetchAndVerify` and `fetchAndVerifyWithKey`. To specify which function to test, comment/uncomment the corresponding lines in the `chooseOne` function of the [`view/index.html` file](https://github.com/PizzaWhisperer/drandjs/blob/master/view/index.html#L91-L92). The default function used is `fetchAndVerify` (the one that fetches the distributed key).
+
+We provide a script to locally run a server that will fake a drand server and a simple html file which show what you could do with `fetchAndVerify`.
 
 To launch the server and open the html file, go to the `example` folder and execute:
 ```bash

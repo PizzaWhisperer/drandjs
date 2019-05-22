@@ -1,6 +1,6 @@
 //fetches the randomness
 function fetchPublic(identity) {
-  var fullPath = identity.Address + "/public";
+  var fullPath = identity.Address + "/api/public";
   if (identity.TLS == false) {
     fullPath = "http://" + fullPath;
   } else  {
@@ -11,7 +11,7 @@ function fetchPublic(identity) {
 
 //fetches the public key
 function fetchKey(identity) {
-  var fullPath = identity.Address + "/info/dist_key";
+  var fullPath = identity.Address + "/api/info/distkey";
   if (identity.TLS == false) {
     fullPath = "http://" + fullPath;
   } else  {
@@ -20,20 +20,25 @@ function fetchKey(identity) {
   return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
 }
 
-function bytesToHex(bytes) {
-		for (var hex = [], i = 0; i < bytes.length; i++) {
-			hex.push((bytes[i] >>> 4).toString(16));
-			hex.push((bytes[i] & 0xF).toString(16));
-		}
-		return hex.join("");
-	}
+//fetches the group file
+function fetchGroup(identity) {
+  var fullPath = identity.Address + "/api/info/group";
+  if (identity.TLS == false) {
+    fullPath = "http://" + fullPath;
+  } else  {
+    fullPath = "https://" + fullPath;
+  }
+  return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
+}
 
+//converts hex string to bytes array
 function hexToBytes(hex) {
     for (var bytes = [], c = 0; c < hex.length; c += 2)
     bytes.push(parseInt(hex.substr(c, 2), 16));
     return bytes;
 }
 
+//converts int to bytes array
 function intToBytes(int) {
     var bytes = [];
     var i = 8;
@@ -53,8 +58,6 @@ function message(msg, round) {
 
 //formats the received strings and verifies signature
 function verify_drand(previous, randomness, round, pub_key) {
-  var nist = kyber.curve.nist;
-  var p256 = new nist.Curve(nist.Params.p256);
   var msg = message(previous, round);
   var p = new kyber.pairing.point.BN256G2Point();
   p.unmarshalBinary(hexToBytes(pub_key));

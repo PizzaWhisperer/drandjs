@@ -8,5 +8,5 @@ class CORSRequestHandler (SimpleHTTPRequestHandler):
         SimpleHTTPRequestHandler.end_headers(self)
 
 if __name__ == '__main__':
-    webbrowser.open('file://' + os.path.realpath("../view/index.html"))
+    webbrowser.open('file://' + os.path.realpath("./view/index.html"))
     test(CORSRequestHandler, HTTPServer, port=int(sys.argv[1]) if len(sys.argv) > 1 else 8000)
