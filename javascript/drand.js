@@ -28,9 +28,9 @@ var fetchAndVerify = function(identity, distkey) {
         randomness = rand.randomness.point
         round = rand.round.toString();
         if (verify_drand(previous, randomness, round, distkey)) {
-          resolve([randomness, round]);
+          resolve([randomness, previous, round]);
         } else {
-          reject([randomness, round]);
+          reject([randomness, previous, round]);
         }
       }).catch(error => console.error('Could not fetch randomness:', error))
     });
