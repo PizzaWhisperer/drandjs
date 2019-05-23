@@ -1,42 +1,67 @@
 # drandjs
 
-Using the package [kyberJS](https://github.com/dedis/cothority/tree/master/external/js/kyber) from dedis, we provide a JavaScript library with a function `fetchAndVerify` that can verify the randomness of the outputted signature S of a [drand](https://github.com/dedis/drand) round, against a message M and the distributed key DK of the protocol run. To do such, it checks that e(M, DK) = e(S, 1), with e being the Optimal Ate pairing operation.
+drandjs is a Javascript library able to communicate with a public [drand](https://github.com/dedis/drand) network. drandjs can fetch *public* randomness from a node or a group of nodes and verify it in the browser. drandjs uses the pairing-based library [kyberJS](https://github.com/dedis/cothority/tree/master/external/js/kyber) from dedis to perform the verification locally.
 
-#### Identity
-`fetchAndVerify` takes as parameter a structure identity composed of the address to fetch the random signature from and a boolean specifying whether to use https or http, and the distributed key.
-`fetchAndVerify` can also be used in fully **automatic** mode, and fetch the distributed key for the user, to do such, use "" for the Key such as :
-```javascript
-{
-  Address: "drand.nikkolasg.xyz:8888",
-  TLS: true,
-  Key: "",
-}
-```
+**NOTE**: This software is considered experimental and has NOT received a third-party audit yet. Therefore, DO NOT USE it in production or for anything security critical at this point.
 
-If you want to specify which distributed key to use, which should be an hexadecimal string, you can provide an identity struct which looks like :
-```javascript
-{
-  Address: "drand.nikkolasg.xyz:8888",
-  TLS: true,
-  Key: "017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578",
-}
-```
+## Installation
 
-#### Returns
-The function returns a Promise [randomness, previous, round].
-#### Usage
-
-To use drandjs, bundle every file together by running `make compile`. It will create a file `drand.js` in the folder `dist` that you can import with the line :
-```javascript
-<script src="../path/to/drand.js"></script>
-```
-or
+There are two ways to install drandjs: by using a CDN or compile it locally and bundle it with your application. 
+In the former case, you can use:
 ```javascript
 <script src="https://cdn.jsdelivr.net/gh/PizzaWhisperer/drandjs/dist/drand.js"></script>
 ```
+In the latter case, simply run `make compile` to bundle every file together and creates the `dist/drand.js` file ready to use in your application.
+
+## Usage
+
+drandjs has a single function `fetchAndVerify(identity, distributed_key)` to fetch and verify public randomness from a drand network. 
+
+### Identity
+
+The identity structure has the following form:
+```json
+{
+  Address: "drand-test.nikkolasg.xyz:8888",
+  TLS: true,
+}
+```
+The **Address** is the IP address or DNS name of the drand node the user wishes to contact. **TLS** is true if drandjs should contact this node over HTTPS or not (drand nodes by default are using HTTPS).
+One can retrieve the identity of drand nodes from the group configuration file of the network. See [drand](https://github.com/dedis/drand) for more information.
+
+### Distributed Key
+
+The distributed key argument represents the distributed key of the participants created during the setup phase.
+The key should be in hexadecimal format and should be given out-of-bands (it can be fetched from the group configuration file or from a drand node operator).
+```
+"017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"
+```
+
+Nevertheless, drandjs allows to set this field to "", in which case, drandjs fetches the distributed key *as well as* the randomness, in order to verify the latter. 
+Note that in this mode of operation, the server may lie about the distributed key and create any valid randomness it wants.
+
+### Randomness 
+
+The function `fetchAndVerify` returns a Promise containing the following structure:
+```json
+{
+    "round": 18332,
+    "previous": "05b851a3b36f11c6f38b2cfa808e3ed55256359694dc482639103c7668e702e70a165d73438cb30b5b73531cd6e17bed1ff623c3638cfdae85d815f339e85120",
+    "randomness": "3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723"
+    }
+}
+```
+
+### Example
+
+or
+
 if you don't want to download anything, and call it like :
 ```javascript
-identity = XXX;
+identity = {
+  Address: "drand-test.nikkolasg.xyz:8888",
+  TLS: true,
+}
 fetchAndVerify(identity)
   .then(function (fulfilled) {
   //The random output was successfully verified, you can
@@ -48,7 +73,7 @@ fetchAndVerify(identity)
   })
 ```
 
-#### Example
+### Test Server
 
 We provide a script to locally run a server that will fake a drand server and a simple html file which show what you could do with `fetchAndVerify`.
 
@@ -56,3 +81,5 @@ To launch the server and open the html file, go to the `example` folder and exec
 ```bash
 python3 script.py
 ```
+
+
