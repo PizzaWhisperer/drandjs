@@ -18,19 +18,18 @@
 </head>
 <body>
   <div id="loader"></div>
-  <script src="../../dist/drand.js"></script>
-
   <div id="randomness"></div>
 
+  <script src="../../dist/drand.js"></script>
   <script>
-
   const randDiv = document.querySelector('#randomness');
   var lastRound = "0";
 
   function display_randomness() {
-    let identity = {Address: "127.0.0.1:8000", TLS: false, Key: ""};
+    var identity = {Address: "127.0.0.1:8000", TLS: false};
+    var key = "";
 
-    fetchAndVerify(identity)
+    fetchAndVerify(identity, key)
     .then(function (fulfilled) {
       randomness = fulfilled[0];
       previous = fulfilled[1];
@@ -46,8 +45,6 @@
   }
 
   function print_round(randomness, previous, round, verified) {
-    console.log(randomness);
-    console.log(verified);
     if (round == lastRound || round == undefined) {
       return
     }

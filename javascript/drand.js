@@ -1,16 +1,16 @@
-var fetchAndVerify = function(identity) {
+var fetchAndVerify = function(identity, key) {
 
-  if (identity.Key == "") {
-    
+  if (key == "") {
+
     return new Promise(function(resolve, reject) {
-      var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var distkey = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchKey(identity).then(key => {
-        pub_key = key.key.point
+        distkey = key.key.point
         fetchPublic(identity).then(rand => {
           previous = rand.previous
           randomness = rand.randomness.point
           round = rand.round.toString();
-          if (verify_drand(previous, randomness, round, pub_key)) {
+          if (verify_drand(previous, randomness, round, distkey)) {
             resolve([randomness, previous, round]);
           } else {
             reject([randomness, previous, round]);
@@ -22,13 +22,13 @@ var fetchAndVerify = function(identity) {
   } else {
 
     return new Promise(function(resolve, reject) {
-      var pub_key = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var distkey = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchPublic(identity).then(rand => {
-        pub_key = identity.Key
+        distkey = key
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
-        if (verify_drand(previous, randomness, round, pub_key)) {
+        if (verify_drand(previous, randomness, round, distkey)) {
           resolve([randomness, round]);
         } else {
           reject([randomness, round]);
