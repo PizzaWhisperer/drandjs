@@ -109,9 +109,9 @@ var n=r(94),i=r(95),a=r(48);function o(){return u.TYPED_ARRAY_SUPPORT?2147483647
         randomness = rand.randomness.point
         round = rand.round.toString();
         if (verify_drand(previous, randomness, round, distkey)) {
-          resolve([randomness, round]);
+          resolve([randomness, previous, round]);
         } else {
-          reject([randomness, round]);
+          reject([randomness, previous, round]);
         }
       }).catch(error => console.error('Could not fetch randomness:', error))
     });
