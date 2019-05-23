@@ -34,9 +34,9 @@ One can retrieve the identity of drand nodes from the group configuration file o
 
 The **distkey** argument represents the distributed key of the participants created during the setup phase.
 The key should be in hexadecimal format and should be given out-of-bands (it can be obtained from the group configuration file or fetched from a drand node operator).
-It shoul look like:
+It should look like:
 ```
-"017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"
+distkey = "017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"
 ```
 
 Nevertheless, drandjs allows to set this field to "", in which case, drandjs fetches the distributed key *as well as* the randomness, in order to verify the latter. 
