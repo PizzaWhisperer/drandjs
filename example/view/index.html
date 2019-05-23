@@ -27,9 +27,9 @@
 
   function display_randomness() {
     var identity = {Address: "127.0.0.1:8000", TLS: false};
-    var key = "";
+    var distkey = "";
 
-    fetchAndVerify(identity, key)
+    fetchAndVerify(identity, distkey)
     .then(function (fulfilled) {
       randomness = fulfilled[0];
       previous = fulfilled[1];

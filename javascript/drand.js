@@ -1,9 +1,9 @@
-var fetchAndVerify = function(identity, key) {
+var fetchAndVerify = function(identity, distkey) {
 
-  if (key == "") {
+  if (distkey == "") {
 
     return new Promise(function(resolve, reject) {
-      var distkey = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchKey(identity).then(key => {
         distkey = key.key.point
         fetchPublic(identity).then(rand => {
@@ -22,9 +22,8 @@ var fetchAndVerify = function(identity, key) {
   } else {
 
     return new Promise(function(resolve, reject) {
-      var distkey = 0; var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchPublic(identity).then(rand => {
-        distkey = key
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
