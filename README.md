@@ -65,11 +65,13 @@ distkey = "";
 fetchAndVerify(identity, distkey)
   .then(function (fulfilled) {
   //The random output was successfully verified, you can
-  //do something with fulfilled.randomness, fulfilled.previous and fulfilled.round such as printing them.
+  //do something with fulfilled.randomness, fulfilled.previous
+  //and fulfilled.round such as printing them.
   })
   .catch(function (error) {
     //A problem occurred during the verification process. You can
-    //do something with error.randomness, error.previous and error.round such as printing them.
+    //do something with error.randomness, error.previous and error.round
+    //such as printing them.
   })
 ```
 
