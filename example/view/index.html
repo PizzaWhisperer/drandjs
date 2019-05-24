@@ -31,16 +31,10 @@
 
     fetchAndVerify(identity, distkey)
     .then(function (fulfilled) {
-      randomness = fulfilled[0];
-      previous = fulfilled[1];
-      round = fulfilled[2];
-      print_round(randomness, previous, round, true);
+      print_round(fulfilled.randomness, fulfilled.previous, fulfilled.round, true);
     })
     .catch(function (error) {
-      randomness = error[0];
-      previous = error[1];
-      round = error[2];
-      print_round(randomness, previous, round, false);
+      print_round(error.randomness, error.previous, error.round, false);
     });
   }
 

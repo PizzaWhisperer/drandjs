@@ -16,7 +16,7 @@ In the latter case, simply run `make compile` to bundle every file together and 
 
 ## Usage
 
-drandjs has a single function `fetchAndVerify(identity, distkey)` to fetch and verify public randomness from a drand network. 
+drandjs has a single function `fetchAndVerify(identity, distkey)` to fetch and verify public randomness from a drand network.
 
 ### Identity
 
@@ -39,22 +39,18 @@ It should look like:
 distkey = "017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"
 ```
 
-Nevertheless, drandjs allows to set this field to "", in which case, drandjs fetches the distributed key *as well as* the randomness, in order to verify the latter. 
+Nevertheless, drandjs allows to set this field to "", in which case, drandjs fetches the distributed key *as well as* the randomness, in order to verify the latter.
 Note that in this mode of operation, the server may lie about the distributed key and create any valid randomness it wants.
 
-### Randomness 
+### Randomness
 
 The function `fetchAndVerify` returns a Promise with the following structure:
-```javascript
-[randomness, previous, round]
-```
-such as:
-```javascript
-[
-"3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723", 
-"05b851a3b36f11c6f38b2cfa808e3ed55256359694dc482639103c7668e702e70a165d73438cb30b5b73531cd6e17bed1ff623c3638cfdae85d815f339e85120",
-18332
-]
+```json
+{
+  "randomness": "3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723",
+  "previous": "05b851a3b36f11c6f38b2cfa808e3ed55256359694dc482639103c7668e702e70a165d73438cb30b5b73531cd6e17bed1ff623c3638cfdae85d815f339e85120",
+  "round": 18332
+}
 ```
 
 ### Example
@@ -69,11 +65,11 @@ distkey = "";
 fetchAndVerify(identity, distkey)
   .then(function (fulfilled) {
   //The random output was successfully verified, you can
-  //do something with fulfilled = [randomness, previous, round] such as printing it.
+  //do something with fulfilled.randomness, fulfilled.previous and fulfilled.round such as printing them.
   })
   .catch(function (error) {
     //A problem occurred during the verification process. You can
-    //do something with error = [randomness, previous, round] such as printing it.
+    //do something with error.randomness, error.previous and error.round such as printing them.
   })
 ```
 
@@ -85,5 +81,3 @@ To launch the server and open the html file, go to the `example` folder and exec
 ```bash
 python3 script.py
 ```
-
-

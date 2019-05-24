@@ -11,9 +11,9 @@ var fetchAndVerify = function(identity, distkey) {
           randomness = rand.randomness.point
           round = rand.round.toString();
           if (verify_drand(previous, randomness, round, distkey)) {
-            resolve([randomness, previous, round]);
+            resolve({"randomness":randomness, "previous":previous, "round":round});
           } else {
-            reject([randomness, previous, round]);
+            reject({"randomness":randomness, "previous":previous, "round":round});
           }
         }).catch(error => console.error('Could not fetch randomness:', error));
       }).catch(error => console.error('Could not fetch the distkey:', error));
@@ -28,9 +28,9 @@ var fetchAndVerify = function(identity, distkey) {
         randomness = rand.randomness.point
         round = rand.round.toString();
         if (verify_drand(previous, randomness, round, distkey)) {
-          resolve([randomness, previous, round]);
+          resolve({"randomness":randomness, "previous":previous, "round":round});
         } else {
-          reject([randomness, previous, round]);
+          reject({"randomness":randomness, "previous":previous, "round":round});
         }
       }).catch(error => console.error('Could not fetch randomness:', error))
     });
