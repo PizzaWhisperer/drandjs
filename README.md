@@ -6,48 +6,58 @@ drandjs is a Javascript library able to communicate with a public [drand](https:
 
 ## Installation
 
-There are two ways to install drandjs: by using a CDN or compile it locally and bundle it with your application.
-
-In the former case, you can use:
+The simplest way to use drandjs is to import the script from *jsdelivr* as in the following:
 ```javascript
 <script src="https://cdn.jsdelivr.net/gh/PizzaWhisperer/drandjs/dist/drand.js"></script>
 ```
-In the latter case, simply run `make compile` to bundle every file together and create the `dist/drand.js` file ready to use in your application.
+
+**Compile from sources**: To compile the sources into a single bundled Javascript file, you can run `make compile` to create the file `dist/drand.js` ready to be included in your application.
 
 ## Usage
 
-drandjs has several public functions which allow to fetch configuration files or *public* randomness from a drand node. In order to know which drand node to contact and to be able to verify the randomness fetched from this node, an identity and a distributed key have to be specified.
-
-### Identity
-
-The identity structure has the following form:
-```json
-{
+The following is a Javascript snippet showing the shortest way to get verified randomness from a running drand network:
+```javascript
+// the identity of the node we want to contact
+var identity = {
   Address: "drand-test.nikkolasg.xyz:8888",
   TLS: true,
-}
-```
-The **Address** is the IP address or DNS name of the drand node the user wishes to contact. **TLS** is true if drandjs should contact this node over HTTPS (drand nodes by default are using HTTPS) and false if the node does not have a TLS certificate.
-One can retrieve the identity of drand nodes from the group configuration file of the network. See [drand](https://github.com/dedis/drand) for more information.
+};
+// the distributed key of the public drand network (optional).
+var dist_key = "30572b6ff54ab9b0a17ed055ffb915a9a31640ee1a10ed20ace8a2394d1121bb3fe4424a24323566b9ed3b6d4aaf43ef9351e1c989fd5e194e27c3d2ef4014586aee32472dddafb6f28f5b36fefdb7863f31f897684e203cd05ad5486baf602f84f02570f7385bc360a577111f5b03387c00d548cc2276a19b3c2e317117baba";
 
-### Distributed Key
+fetchAndVerify(identity, dist_key)
+  .then(function (fulfilled) {
+  // The randomness was successfully fetched and verified. fulfilled has 
+  // the following structure:
+  // {
+  //     round: <integer>,
+  //     previous: <hexadecimal encoding of the previous randomness>,
+  //     randomness: <hexadecimal encoding of randomness generated at 
+  //     the given round>,
+  // }
+  })
+  .catch(function (error) {
+    // A problem occurred during the verification process. error has the 
+    // same structure as fulfilled.
+  })
+ ```
 
-The **distkey** argument represents the distributed key of the participants created during the setup phase.
-The key should be in hexadecimal format and should be given out-of-bands (it can be obtained from the group configuration file or fetched from a drand node operator).
-It should look like:
-```
-distkey = "017f2254bc09a999661f92457122613adb773a6b7c74333a59bde7dd552a7eac2a79263bb6fb1f3840218f3181218b952e2af35be09edaee66566b458c92609f7571e8bb519c9109055b84f392c9e84f5bb828f988ce0423ce708be1dcf808d9cc63a610352b504115ee38bc23dd259e88a5d1221d53e45c9520be9b601fb4f578"
-```
+There are two important pieces of information to provide drandjs:
 
-Nevertheless, drandjs allows to set this field to "", in which case, drandjs fetches the distributed key *as well as* the randomness, in order to verify the latter.
-Note that in this mode of operation, the server may lie about the distributed key and create any valid randomness it wants.
+-  **Identity**: It holds all required information to contact a drand node. The *Address* is the IP address or DNS name of the drand node the user wishes to contact. *TLS* is true if drandjs should contact this node over HTTPS (drand nodes by default are using HTTPS) and false if the node does not have a TLS certificate. One can retrieve the identity of drand nodes from the group configuration file of the network. See [drand](https://github.com/dedis/drand) for more information.
 
-### Randomness
+-  **Distributed Key**: It holds the distributed public key created during the setup phase of a drand network. The key must be in hexadecimal format and should be given out-of-bands (it can be obtained from the group configuration file or fetched from a drand node operator. If the key is not available, `fetchAndVerifỳ` allows to give an **empty string** in place of the `dist_key` argument, in which case, drandjs fetches the distributed key from the server *as well as* the randomness. However, in this mode of operation, the server **can lie** about the distributed key and thus create any valid *randomness* it wants.
 
-- `fetchPublic(identity)` fetches the latest *public* randomness at the specified drand node. The returned JSON matches the structure that you can find at the endpoint `address/api/public`.
-- `verify_drand(previous, randomness, round, distkey)` returns `true` if the verification of the given `randomness` against the other parameters was successful, and `false` if an error occured during the verification process.
 
-- `fetchAndVerify(identity, distkey)` sequentially calls those two functions and returns a Promise, representing the eventual completion (or failure) of the verification of the fetched randomness, with the following structure:
+### API 
+
+Here is a list of public function drandjs exposes. Note that all byte-like arguments (such as the randomness), unless otherwise noted, are hexadecimal-encoded strings. 
+
+- `fetchPublic(identity)` fetches the latest *public* randomness at the specified drand node.  See the [service definition](https://github.com/dedis/drand/blob/master/protobuf/drand/public.proto#L16) for the structure of the resulting JSON.
+
+- `verifyDrand(previous, randomness, round, distkey)` returns `true` if the verification of the given `randomness` against the `distkey` over the message formed from both the `previous` and `round` arguments is successful. It returns `false` if an error occured during the verification process. 
+
+- `fetchAndVerify(identity, distkey)` sequentially calls `fetchPublic` and `verifyDrand` and returns a Promise, holding the eventual randomness in case of sucess and the error in case of failure. It returns a JSON structure such as:
 ```json
 {
   "randomness": "3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723",
@@ -55,45 +65,9 @@ Note that in this mode of operation, the server may lie about the distributed ke
   "round": 18332
 }
 ```
+- `fetchGroup(identity)` returns the current group the node denoted by the identity belongs to. The returned group contains all the nodes in the network, the threshold, the period and the distributed public key as well. We refer to the [protobuf definition](https://github.com/dedis/drand/blob/master/protobuf/drand/info.proto#L12) for more information.
 
-### Info
-
-To access configuration files about the running nodes, one can call
-- `fetchGroup(identity)`
-
-and
-
-- `fetchKey(identity)` 
-
-which return the JSON that you can find respectively at `address/api/info/group` and `address/api/info/distkey`.
-
-### Examples
-
-```javascript
-identity = {
-  Address: "drand-test.nikkolasg.xyz:8888",
-  TLS: true,
-}
-distkey = "";
-
-fetchAndVerify(identity, distkey)
-  .then(function (fulfilled) {
-  //The random output was successfully verified, you can
-  //do something with fulfilled.randomness, fulfilled.previous
-  //and fulfilled.round such as printing them.
-  })
-  .catch(function (error) {
-    //A problem occurred during the verification process. You can
-    //do something with error.randomness, error.previous and error.round
-    //such as printing them.
-  })
-  
-  fetchGroup(identity).then(group => {
-    //The group was successfully fetched. You can do something with
-    //group.period, group.threshold, group.nodes and group.distkey
-    //such as printing them.
-    }).catch(error => console.error('Could not fetch group:', error))
-```
+- `fetchKey(identity)` returns only the distributed key from which the node denoted by the given identity holds a share. We refer to the [protobuf definition](https://github.com/dedis/drand/blob/master/protobuf/drand/info.proto#L18) for more information.
 
 ### Test Server
 
