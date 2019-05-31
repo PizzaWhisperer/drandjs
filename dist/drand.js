@@ -57,7 +57,7 @@ function message(msg, round) {
 }
 
 //formats the received strings and verifies signature
-function verify_drand(previous, randomness, round, distkey) {
+function verifyDrand(previous, randomness, round, distkey) {
   var msg = message(previous, round);
   var p = new kyber.pairing.point.BN256G2Point();
   p.unmarshalBinary(hexToBytes(distkey));
@@ -91,7 +91,7 @@ var n=r(94),i=r(95),a=r(48);function o(){return u.TYPED_ARRAY_SUPPORT?2147483647
           previous = rand.previous
           randomness = rand.randomness.point
           round = rand.round.toString();
-          if (verify_drand(previous, randomness, round, distkey)) {
+          if (verifyDrand(previous, randomness, round, distkey)) {
             resolve({"randomness":randomness, "previous":previous, "round":round});
           } else {
             reject({"randomness":randomness, "previous":previous, "round":round});
@@ -108,7 +108,7 @@ var n=r(94),i=r(95),a=r(48);function o(){return u.TYPED_ARRAY_SUPPORT?2147483647
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
-        if (verify_drand(previous, randomness, round, distkey)) {
+        if (verifyDrand(previous, randomness, round, distkey)) {
           resolve({"randomness":randomness, "previous":previous, "round":round});
         } else {
           reject({"randomness":randomness, "previous":previous, "round":round});

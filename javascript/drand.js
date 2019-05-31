@@ -10,7 +10,7 @@ var fetchAndVerify = function(identity, distkey) {
           previous = rand.previous
           randomness = rand.randomness.point
           round = rand.round.toString();
-          if (verify_drand(previous, randomness, round, distkey)) {
+          if (verifyDrand(previous, randomness, round, distkey)) {
             resolve({"randomness":randomness, "previous":previous, "round":round});
           } else {
             reject({"randomness":randomness, "previous":previous, "round":round});
@@ -27,7 +27,7 @@ var fetchAndVerify = function(identity, distkey) {
         previous = rand.previous
         randomness = rand.randomness.point
         round = rand.round.toString();
-        if (verify_drand(previous, randomness, round, distkey)) {
+        if (verifyDrand(previous, randomness, round, distkey)) {
           resolve({"randomness":randomness, "previous":previous, "round":round});
         } else {
           reject({"randomness":randomness, "previous":previous, "round":round});
