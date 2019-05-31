@@ -44,7 +44,7 @@ Note that in this mode of operation, the server may lie about the distributed ke
 
 ### Randomness
 
-- `fetchPublic(identity)` fetches the latest *public* randomness at the specified drand_node. The returned JSON matches the structure that you can find at the endpoint `address/api/public`.
+- `fetchPublic(identity)` fetches the latest *public* randomness at the specified drand node. The returned JSON matches the structure that you can find at the endpoint `address/api/public`.
 - `verify_drand(previous, randomness, round, distkey)` returns `true` if the verification of the given `randomness` against the other parameters was successful, and `false` if an error occured during the verification process.
 
 - `fetchAndVerify(identity, distkey)` sequentially calls those two functions and returns a Promise, representing the eventual completion (or failure) of the verification of the fetched randomness, with the following structure:
@@ -60,8 +60,11 @@ Note that in this mode of operation, the server may lie about the distributed ke
 
 To access configuration files about the running nodes, one can call
 - `fetchGroup(identity)`
+
 and
+
 - `fetchKey(identity)` 
+
 which return the JSON that you can find respectively at `address/api/info/group` and `address/api/info/distkey`.
 
 ### Examples
