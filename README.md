@@ -16,7 +16,7 @@ In the latter case, simply run `make compile` to bundle every file together and 
 
 ## Usage
 
-drandjs has a single function `fetchAndVerify(identity, distkey)` to fetch and verify public randomness from a drand network.
+drandjs has several public functions which allow to fetch configuration files or *public* randomness from a drand node. In order to know which drand node to contact and to be able to verify the randomness fetched from this node, an identity and a distributed key have to be specified.
 
 ### Identity
 
@@ -44,7 +44,10 @@ Note that in this mode of operation, the server may lie about the distributed ke
 
 ### Randomness
 
-The function `fetchAndVerify` returns a Promise with the following structure:
+- `fetchPublic(identity)` fetches the latest *public* randomness at the specified drand_node. The returned JSON matches the structure that you can find at the endpoint `address/api/public`.
+- `verify_drand(previous, randomness, round, distkey)` returns `true` if the verification of the given `randomness` against the other parameters was successful, and `false` if an error occured during the verification process.
+
+- `fetchAndVerify(identity, distkey)` sequentially calls those two functions and returns a Promise, representing the eventual completion (or failure) of the verification of the fetched randomness, with the following structure:
 ```json
 {
   "randomness": "3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723",
@@ -53,7 +56,15 @@ The function `fetchAndVerify` returns a Promise with the following structure:
 }
 ```
 
-### Example
+### Info
+
+To access configuration files about the running nodes, one can call
+- `fetchGroup(identity)`
+and
+- `fetchKey(identity)` 
+which return the JSON that you can find respectively at `address/api/info/group` and `address/api/info/distkey`.
+
+### Examples
 
 ```javascript
 identity = {
@@ -73,11 +84,17 @@ fetchAndVerify(identity, distkey)
     //do something with error.randomness, error.previous and error.round
     //such as printing them.
   })
+  
+  fetchGroup(identity).then(group => {
+    //The group was successfully fetched. You can do something with
+    //group.period, group.threshold, group.nodes and group.distkey
+    //such as printing them.
+    }).catch(error => console.error('Could not fetch group:', error))
 ```
 
 ### Test Server
 
-We provide a script to locally run a server that will fake a drand server and a simple html file which show what you could do with `fetchAndVerify`.
+We provide a script to locally run a server that will fake a drand node and a simple html file which show what you could do with `fetchAndVerify`.
 
 To launch the server and open the html file, go to the `example` folder and execute:
 ```bash
