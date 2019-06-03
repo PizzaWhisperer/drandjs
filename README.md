@@ -42,7 +42,7 @@ fetchAndVerify(identity, dist_key)
   })
  ```
 
-There are two important pieces of information to provide drandjs:
+There are two important pieces of information to provide to drandjs:
 
 -  **Identity**: It holds all required information to contact a drand node. The *Address* is the IP address or DNS name of the drand node the user wishes to contact. *TLS* is true if drandjs should contact this node over HTTPS (drand nodes by default are using HTTPS) and false if the node does not have a TLS certificate. One can retrieve the identity of drand nodes from the group configuration file of the network. See [drand](https://github.com/dedis/drand) for more information.
 
@@ -57,7 +57,7 @@ Here is a list of public function drandjs exposes. Note that all byte-like argum
 
 - `verifyDrand(previous, randomness, round, distkey)` returns `true` if the verification of the given `randomness` against the `distkey` over the message formed from both the `previous` and `round` arguments is successful. It returns `false` if an error occured during the verification process. 
 
-- `fetchAndVerify(identity, distkey)` sequentially calls `fetchPublic` and `verifyDrand` and returns a Promise, holding the eventual randomness in case of sucess and the error in case of failure. It returns a JSON structure such as:
+- `fetchAndVerify(identity, distkey)` sequentially calls `fetchPublic` and `verifyDrand` and returns a Promise, holding the eventual randomness in case of success and the error in case of failure. It returns a JSON structure such as:
 ```json
 {
   "randomness": "3393f21a641e7324b0b75ad0a40ba388e0add0bb5c9d61532ff501f35815bca85af6471f1f181a4d3c484d9cdf7a8fded25645ddde15fc33a15a01f61361c723",
