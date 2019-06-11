@@ -19,11 +19,11 @@ The following is a Javascript snippet showing the shortest way to get verified r
 ```javascript
 // the identity of the node we want to contact
 var identity = {
-  Address: "drand-test.nikkolasg.xyz:8888",
+  Address: "drand.zerobyte.io:8888",
   TLS: true,
 };
 // the distributed key of the public drand network (optional).
-var dist_key = "30572b6ff54ab9b0a17ed055ffb915a9a31640ee1a10ed20ace8a2394d1121bb3fe4424a24323566b9ed3b6d4aaf43ef9351e1c989fd5e194e27c3d2ef4014586aee32472dddafb6f28f5b36fefdb7863f31f897684e203cd05ad5486baf602f84f02570f7385bc360a577111f5b03387c00d548cc2276a19b3c2e317117baba";
+var dist_key = "51e1014efb8be0c0c8c70cec1473a0d5b2f40d3d926635b9e74c41f89673f6b37c0c752f67419a32db91abf31360d8659471b8709040cf650e908db7f4bda9308e01400477e3f586ccb607d7bcd47a0272cca6ec52d38d2599aedc70788f739a8dc265b7aaf7b6fd4aeb67058cbe5c586024c97068321117958b871741758b89";
 
 fetchAndVerify(identity, dist_key)
   .then(function (fulfilled) {
