@@ -9,6 +9,17 @@ function fetchPublic(identity) {
   return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
 }
 
+//fetches the randomness at specified round
+function fetchRound(identity, round) {
+  var fullPath = identity.Address + "/api/public/" + round;
+  if (identity.TLS == false) {
+    fullPath = "http://" + fullPath;
+  } else  {
+    fullPath = "https://" + fullPath;
+  }
+  return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
+}
+
 //fetches the public key
 function fetchKey(identity) {
   var fullPath = identity.Address + "/api/info/distkey";

@@ -9,6 +9,17 @@ function fetchPublic(identity) {
   return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
 }
 
+//fetches the randomness at specified round
+function fetchRound(identity, round) {
+  var fullPath = identity.Address + "/api/public/" + round;
+  if (identity.TLS == false) {
+    fullPath = "http://" + fullPath;
+  } else  {
+    fullPath = "https://" + fullPath;
+  }
+  return fetch(fullPath).then(resp => Promise.resolve(resp.json()));
+}
+
 //fetches the public key
 function fetchKey(identity) {
   var fullPath = identity.Address + "/api/info/distkey";
@@ -118,4 +129,45 @@ var n=r(94),i=r(95),a=r(48);function o(){return u.TYPED_ARRAY_SUPPORT?2147483647
   }
 }
 
-window.fetchAndVerify = fetchAndVerify
+var fetchAndVerifyRound = function(identity, distkey, round) {
+
+  if (distkey == "") {
+
+    return new Promise(function(resolve, reject) {
+      var previous = 0; var randomness = 0; var err = 0;
+      fetchKey(identity).then(key => {
+        distkey = key.key.point
+        fetchRound(identity, round).then(rand => {
+          previous = rand.previous
+          randomness = rand.randomness.point
+          if (round != rand.round) {
+            console.error('Could not fetch the randomness at round:', round);
+          }
+          if (verifyDrand(previous, randomness, round, distkey)) {
+            resolve({"randomness":randomness, "previous":previous, "round":round});
+          } else {
+            reject({"randomness":randomness, "previous":previous, "round":round});
+          }
+        }).catch(error => console.error('Could not fetch randomness:', error));
+      }).catch(error => console.error('Could not fetch the distkey:', error));
+    });
+
+  } else {
+
+    return new Promise(function(resolve, reject) {
+      var previous = 0; var randomness = 0; var err = 0;
+      fetchRound(identity, round).then(rand => {
+        previous = rand.previous
+        randomness = rand.randomness.point
+        if (round != rand.round) {
+          console.error('Could not fetch the randomness at round:', round);
+        }
+        if (verifyDrand(previous, randomness, round, distkey)) {
+          resolve({"randomness":randomness, "previous":previous, "round":round});
+        } else {
+          reject({"randomness":randomness, "previous":previous, "round":round});
+        }
+      }).catch(error => console.error('Could not fetch randomness:', error))
+    });
+  }
+}

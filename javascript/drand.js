@@ -37,4 +37,45 @@ var fetchAndVerify = function(identity, distkey) {
   }
 }
 
-window.fetchAndVerify = fetchAndVerify
+var fetchAndVerifyRound = function(identity, distkey, round) {
+
+  if (distkey == "") {
+
+    return new Promise(function(resolve, reject) {
+      var previous = 0; var randomness = 0; var err = 0;
+      fetchKey(identity).then(key => {
+        distkey = key.key.point
+        fetchRound(identity, round).then(rand => {
+          previous = rand.previous
+          randomness = rand.randomness.point
+          if (round != rand.round) {
+            console.error('Could not fetch the randomness at round:', round);
+          }
+          if (verifyDrand(previous, randomness, round, distkey)) {
+            resolve({"randomness":randomness, "previous":previous, "round":round});
+          } else {
+            reject({"randomness":randomness, "previous":previous, "round":round});
+          }
+        }).catch(error => console.error('Could not fetch randomness:', error));
+      }).catch(error => console.error('Could not fetch the distkey:', error));
+    });
+
+  } else {
+
+    return new Promise(function(resolve, reject) {
+      var previous = 0; var randomness = 0; var err = 0;
+      fetchRound(identity, round).then(rand => {
+        previous = rand.previous
+        randomness = rand.randomness.point
+        if (round != rand.round) {
+          console.error('Could not fetch the randomness at round:', round);
+        }
+        if (verifyDrand(previous, randomness, round, distkey)) {
+          resolve({"randomness":randomness, "previous":previous, "round":round});
+        } else {
+          reject({"randomness":randomness, "previous":previous, "round":round});
+        }
+      }).catch(error => console.error('Could not fetch randomness:', error))
+    });
+  }
+}
