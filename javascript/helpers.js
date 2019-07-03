@@ -69,9 +69,14 @@ function message(msg, round) {
 
 //formats the received strings and verifies signature
 function verifyDrand(previous, randomness, round, distkey) {
-  var msg = message(previous, round);
-  var p = new kyber.pairing.point.BN256G2Point();
-  p.unmarshalBinary(hexToBytes(distkey));
-  var sig = hexToBytes(randomness);
-  return kyber.sign.bls.verify(msg, p, sig);
+  try {
+    var msg = message(previous, round);
+    var p = new kyber.pairing.point.BN256G2Point();
+    p.unmarshalBinary(hexToBytes(distkey));
+    var sig = hexToBytes(randomness);
+    return kyber.sign.bls.verify(msg, p, sig);
+  } catch (e) {
+    console.error('Could not verify:', e);
+    return false;
+  }
 }

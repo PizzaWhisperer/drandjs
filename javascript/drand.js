@@ -5,10 +5,10 @@ var fetchAndVerify = function(identity, distkey) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchKey(identity).then(key => {
-        distkey = key.key.point
+        distkey = key.key.point;
         fetchPublic(identity).then(rand => {
-          previous = rand.previous
-          randomness = rand.randomness.point
+          previous = rand.previous;
+          randomness = rand.randomness.point;
           round = rand.round.toString();
           if (verifyDrand(previous, randomness, round, distkey)) {
             resolve({"randomness":randomness, "previous":previous, "round":round});
@@ -24,8 +24,8 @@ var fetchAndVerify = function(identity, distkey) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var randomness = 0; var round = 0; var err = 0;
       fetchPublic(identity).then(rand => {
-        previous = rand.previous
-        randomness = rand.randomness.point
+        previous = rand.previous;
+        randomness = rand.randomness.point;
         round = rand.round.toString();
         if (verifyDrand(previous, randomness, round, distkey)) {
           resolve({"randomness":randomness, "previous":previous, "round":round});
@@ -44,19 +44,23 @@ var fetchAndVerifyRound = function(identity, distkey, round) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var randomness = 0; var err = 0;
       fetchKey(identity).then(key => {
-        distkey = key.key.point
+        distkey = key.key.point;
         fetchRound(identity, round).then(rand => {
-          previous = rand.previous
-          randomness = rand.randomness.point
-          if (round != rand.round) {
-            console.error('Could not fetch the randomness at round:', round);
-          }
+          previous = rand.previous;
+          randomness = rand.randomness.point;
           if (verifyDrand(previous, randomness, round, distkey)) {
             resolve({"randomness":randomness, "previous":previous, "round":round});
           } else {
             reject({"randomness":randomness, "previous":previous, "round":round});
           }
-        }).catch(error => console.error('Could not fetch randomness:', error));
+        }).catch(error => {
+          console.log(error);
+          if (error.name === 'SyntaxError') {
+            console.error('Could not fetch the round:', round);
+          } else {
+            console.error('Could not fetch randomness:', error);
+          }
+        });
       }).catch(error => console.error('Could not fetch the distkey:', error));
     });
 
@@ -65,17 +69,21 @@ var fetchAndVerifyRound = function(identity, distkey, round) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var randomness = 0; var err = 0;
       fetchRound(identity, round).then(rand => {
-        previous = rand.previous
-        randomness = rand.randomness.point
-        if (round != rand.round) {
-          console.error('Could not fetch the randomness at round:', round);
-        }
+        previous = rand.previous;
+        randomness = rand.randomness.point;
         if (verifyDrand(previous, randomness, round, distkey)) {
           resolve({"randomness":randomness, "previous":previous, "round":round});
         } else {
           reject({"randomness":randomness, "previous":previous, "round":round});
         }
-      }).catch(error => console.error('Could not fetch randomness:', error))
+      }).catch(error => {
+        console.log(error);
+        if (error.name === 'SyntaxError') {
+          console.error('Could not fetch the round:', round);
+        } else {
+          console.error('Could not fetch randomness:', error);
+        }
+      });
     });
   }
 }
