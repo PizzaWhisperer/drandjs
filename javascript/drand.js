@@ -1,57 +1,61 @@
+// fetchAndVerify fetches needed information to verify the latest randomness and verifies it
 var fetchAndVerify = function(identity, distkey) {
-
   if (distkey == "") {
 
+    //fetch the distkey as well
     return new Promise(function(resolve, reject) {
-      var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var previous = 0; var signature = 0; var randomness = 0; var round = 0; var err = 0;
       fetchKey(identity).then(key => {
         distkey = key.key.point;
         fetchPublic(identity).then(rand => {
           previous = rand.previous;
-          randomness = rand.randomness.point;
+          signature = rand.signature;
+          randomness = rand.randomness;
           round = rand.round.toString();
-          if (verifyDrand(previous, randomness, round, distkey)) {
-            resolve({"randomness":randomness, "previous":previous, "round":round});
+          if (verifyDrand(previous, signature, randomness, round, distkey)) {
+            resolve({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
           } else {
-            reject({"randomness":randomness, "previous":previous, "round":round});
+            reject({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
           }
         }).catch(error => console.error('Could not fetch randomness:', error));
       }).catch(error => console.error('Could not fetch the distkey:', error));
     });
 
   } else {
-
+    //use given distkey
     return new Promise(function(resolve, reject) {
-      var previous = 0; var randomness = 0; var round = 0; var err = 0;
+      var previous = 0; var signature = 0; var randomness = 0; var round = 0; var err = 0;
       fetchPublic(identity).then(rand => {
         previous = rand.previous;
-        randomness = rand.randomness.point;
+        signature = rand.signature;
+        randomness = rand.randomness;
         round = rand.round.toString();
-        if (verifyDrand(previous, randomness, round, distkey)) {
-          resolve({"randomness":randomness, "previous":previous, "round":round});
+        if (verifyDrand(previous, signature, randomness, round, distkey)) {
+          resolve({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
         } else {
-          reject({"randomness":randomness, "previous":previous, "round":round});
+          reject({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
         }
       }).catch(error => console.error('Could not fetch randomness:', error))
     });
   }
 }
 
+// fetchAndVerify fetches needed information to verify the randomness at a given round and verifies it
 var fetchAndVerifyRound = function(identity, distkey, round) {
-
   if (distkey == "") {
 
     return new Promise(function(resolve, reject) {
-      var previous = 0; var randomness = 0; var err = 0;
+      var previous = 0; var signature = 0; var randomness = 0; var err = 0;
       fetchKey(identity).then(key => {
         distkey = key.key.point;
         fetchRound(identity, round).then(rand => {
           previous = rand.previous;
-          randomness = rand.randomness.point;
-          if (verifyDrand(previous, randomness, round, distkey)) {
-            resolve({"randomness":randomness, "previous":previous, "round":round});
+          signature = rand.signature;
+          randomness = rand.randomness;
+          if (verifyDrand(previous, signature, randomness, round, distkey)) {
+            resolve({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
           } else {
-            reject({"randomness":randomness, "previous":previous, "round":round});
+            reject({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
           }
         }).catch(error => {
           console.log(error);
@@ -67,14 +71,15 @@ var fetchAndVerifyRound = function(identity, distkey, round) {
   } else {
 
     return new Promise(function(resolve, reject) {
-      var previous = 0; var randomness = 0; var err = 0;
+      var previous = 0; var signature = 0; var randomness = 0; var err = 0;
       fetchRound(identity, round).then(rand => {
         previous = rand.previous;
-        randomness = rand.randomness.point;
-        if (verifyDrand(previous, randomness, round, distkey)) {
-          resolve({"randomness":randomness, "previous":previous, "round":round});
+        signature = rand.signature;
+        randomness = rand.randomness;
+        if (verifyDrand(previous, signature, randomness, round, distkey)) {
+          resolve({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
         } else {
-          reject({"randomness":randomness, "previous":previous, "round":round});
+          reject({"round":round, "previous":previous, "signature":signature, "randomness": randomness});
         }
       }).catch(error => {
         console.log(error);
