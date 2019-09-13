@@ -6,7 +6,7 @@ var fetchAndVerify = function(identity, distkey) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var signature = 0; var randomness = 0; var round = 0; var err = 0;
       fetchKey(identity).then(key => {
-        distkey = key.key.point;
+        distkey = key.key;
         fetchPublic(identity).then(rand => {
           previous = rand.previous;
           signature = rand.signature;
@@ -47,7 +47,7 @@ var fetchAndVerifyRound = function(identity, distkey, round) {
     return new Promise(function(resolve, reject) {
       var previous = 0; var signature = 0; var randomness = 0; var err = 0;
       fetchKey(identity).then(key => {
-        distkey = key.key.point;
+        distkey = key.key;
         fetchRound(identity, round).then(rand => {
           previous = rand.previous;
           signature = rand.signature;

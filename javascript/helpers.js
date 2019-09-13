@@ -70,7 +70,7 @@ function message(prev, round) {
 // verifyDrand formats previous and round into the signed message, verifies the
 // signature against the distributed key and checks that the randomness hash
 // matches
-function verifyDrand(previous, signature, randomness, round, distkey) {
+async function verifyDrand(previous, signature, randomness, round, distkey) {
   try {
     var msg = message(previous, round);
     var p = new kyber.pairing.point.BN256G2Point();
@@ -83,4 +83,24 @@ function verifyDrand(previous, signature, randomness, round, distkey) {
     console.error('Could not verify:', e);
     return false;
   }
+}
+
+/**
+* digestMessage and hexString are used to hash the signature into randomness
+**/
+async function digestMessage(message) {
+  const hash = await window.crypto.subtle.digest('SHA-512', message);
+  return hash;
+}
+
+function hexString(buffer) {
+  const byteArray = new Uint8Array(buffer);
+
+  const hexCodes = [...byteArray].map(value => {
+    const hexCode = value.toString(16);
+    const paddedHexCode = hexCode.padStart(2, '0');
+    return paddedHexCode;
+  });
+
+  return hexCodes.join('');
 }
