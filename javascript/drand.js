@@ -12,7 +12,7 @@ var fetchAndVerify = function(identity, distkey, round) {
     return new Promise(function(resolve, reject) {
       fetchKey(identity).then(key => {
         distkey = key.key;
-        if (round == defaultRound) {
+        if (round == latestRound) {
           //use latest randomness
           fetchLatest(identity).then(rand => {
             previous = rand.previous;
@@ -51,7 +51,7 @@ var fetchAndVerify = function(identity, distkey, round) {
   } else {
     //we use given distkey
     return new Promise(function(resolve, reject) {
-      if (round == defaultRound) {
+      if (round == latestRound) {
         //use latest randomness
         fetchLatest(identity).then(rand => {
           previous = rand.previous;

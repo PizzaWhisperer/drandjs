@@ -1,5 +1,5 @@
 var defaultDistKey = "";
-var defaultRound = -1;
+var latestRound = -1;
 
 // fetchLatest fetches the latest randomness from the node described by identity
 function fetchLatest(identity) {
