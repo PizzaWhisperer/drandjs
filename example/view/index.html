@@ -26,20 +26,21 @@
   var lastRound = "0";
 
   function display_randomness() {
-    var identity = {Address: "127.0.0.1:8000", TLS: false};
-    //var identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true};
-    var distkey = "";
+    //var identity = {Address: "127.0.0.1:8000", TLS: false};
+    var identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true};
+    var distkey = defaultDistKey;
+    var round = defaultRound;
 
-    fetchAndVerify(identity, distkey)
+    fetchAndVerify(identity, distkey, round)
     .then(function (fulfilled) {
-      print_round(fulfilled.randomness, fulfilled.previous, fulfilled.round, true);
+      print_round(fulfilled.randomness, fulfilled.previous, fulfilled.signature, fulfilled.round, true);
     })
     .catch(function (error) {
-      print_round(error.randomness, error.previous, error.round, false);
+      print_round(error.randomness, error.previous, error.signature, error.round, false);
     });
   }
 
-  function print_round(randomness, previous, round, verified) {
+  function print_round(randomness, previous, signature, round, verified) {
     if (round == lastRound || round == undefined) {
       return
     }

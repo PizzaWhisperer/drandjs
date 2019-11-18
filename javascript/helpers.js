@@ -1,5 +1,8 @@
-// fetchPublic fetches the randomness from the node described by identity
-function fetchPublic(identity) {
+var defaultDistKey = "";
+var defaultRound = -1;
+
+// fetchLatest fetches the latest randomness from the node described by identity
+function fetchLatest(identity) {
   var fullPath = identity.Address + "/api/public";
   if (identity.TLS == false) {
     fullPath = "http://" + fullPath;
@@ -77,7 +80,12 @@ async function verifyDrand(previous, signature, randomness, round, distkey) {
     p.unmarshalBinary(hexToBytes(distkey));
     var sig = hexToBytes(signature);
     var ver_sig = kyber.sign.bls.verify(msg, p, sig);
-    var ver_rand = true;
+    var ver_rand = false;
+    await sha512(new Uint8Array(sig)).then(freshRand => {
+      if (freshRand === randomness) {
+        ver_rand = true;
+      }
+    });
     return ver_rand && ver_sig;
   } catch (e) {
     console.error('Could not verify:', e);
@@ -85,22 +93,8 @@ async function verifyDrand(previous, signature, randomness, round, distkey) {
   }
 }
 
-/**
-* digestMessage and hexString are used to hash the signature into randomness
-**/
-async function digestMessage(message) {
-  const hash = await window.crypto.subtle.digest('SHA-512', message);
-  return hash;
-}
-
-function hexString(buffer) {
-  const byteArray = new Uint8Array(buffer);
-
-  const hexCodes = [...byteArray].map(value => {
-    const hexCode = value.toString(16);
-    const paddedHexCode = hexCode.padStart(2, '0');
-    return paddedHexCode;
+function sha512(str) {
+  return crypto.subtle.digest("SHA-512", str).then(buf => {
+    return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
   });
-
-  return hexCodes.join('');
 }
