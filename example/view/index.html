@@ -29,7 +29,7 @@
     //var identity = {Address: "127.0.0.1:8000", TLS: false};
     var identity = {Address: "drand.nikkolasg.xyz:8888", TLS: true};
     var distkey = defaultDistKey;
-    var round = defaultRound;
+    var round = latestRound;
 
     fetchAndVerify(identity, distkey, round)
     .then(function (fulfilled) {
